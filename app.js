@@ -28,7 +28,11 @@ app.post('/api/login',(req,res)=>{
 //api to protect
 app.post('/api/post',verifytokenMiddleware,(req,res)=>{
     jwt.verify(req.token, 'my_secret_key',(err,auth_data)=>{
-        if(err) res.sendStatus(403)
+        if(err) { 
+            console.log(err);
+            res.json({
+            message:"oopss... something broke",
+        });}
         else{
             res.json({
                 message:"protect me",
@@ -48,7 +52,8 @@ function verifytokenMiddleware(req, res, next){
         const baerer = baererHeader.split(' ');
         const baererToken = baerer[1];
         req.token = baererToken;
-        next; // this is cool, next goes to the NEXT part of the
+        console.log(`request token is ${req.token}`);
+        next(); // this is cool, next goes to the NEXT part of the
         //middleware
     }
     res.sendStatus(403);
